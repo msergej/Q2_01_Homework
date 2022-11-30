@@ -1,6 +1,106 @@
 import os
 os.system('cls||clear')
 
+          # Домашнее задание к уроку 03
+
+# Задание 1. Задайте список из нескольких чисел. Напишите программу, которая найдёт сумму элементов списка,
+# # стоящих на нечётной позиции.
+# *Пример: [2, 3, 5, 9, 3] -> на нечётных позициях элементы 3 и 9, ответ: 12
+def Task_1_OddPositionsSum():
+    import random
+    def input_natural_number(Text):
+        while True :
+            try :
+                N = int(input(Text))
+                if N > 0 :
+                    return N
+                else :
+                    print('Введено ненатуральное число.')
+            except :
+                print('Число не введено.')
+
+    OddPositionsSum = 0
+    N = input_natural_number("Введите натуральное число - длину списка:")
+    List = [random.randint(-1000,1001) for i in range(0, N)]
+    print("Список чисел:", List)
+    for i in range (len(List)):
+        if i%2 == 1 :
+            OddPositionsSum += List[i]
+
+    return OddPositionsSum
+# Задание 2. Напишите программу, которая найдёт произведение пар чисел списка.
+# Парой считаем первый и последний элемент, второй и предпоследний и т.д.
+# *Пример:* [2, 3, 4, 5, 6] => [12, 15, 16]; [2, 3, 5, 6] => [12, 15]
+def Task_2_PairsProducts(N):
+    import random  
+    import math 
+
+    List = [random.randint(-10,11) for i in range(0, N)]
+    print("Список чисел:", List)
+    ProductsList = []
+    for i in range(math.ceil(len(List)/2)):
+        ProductsList.append(List[i] * List[N-1-i])
+
+    return "Произведения пар чисел: " + str(ProductsList)
+# Задание 3. Задайте список из вещественных чисел. Напишите программу, которая найдёт разницу между максимальным
+# и минимальным значениями дробных частей элементов.
+# *Пример:* [1.1, 1.2, 3.1, 5, 10.01] => 0.19 (максимальное значение у числа 1.2 , минимальное у 10.01)
+def Task_3_FractionalPartsDifference(N):
+    import OwnFunctions as OFs
+    import random
+    import math 
+
+    N = OFs.input_natural_number("Введите натуральное число - длину списка: ")
+    List = [random.randint(0,10001) / 1000 for i in range(0, N)]
+    print("Список чисел:", List)
+    FractionalPartMin = 1
+    FractionalPartMax = 0
+    for i in (range(len(List))):
+        if (FractionalPartMin > List[i]-math.floor(List[i])):
+            FractionalPartMin = round(List[i]-math.floor(List[i]),3)
+        elif (FractionalPartMax < List[i]-math.floor(List[i])):
+            FractionalPartMax = round(List[i]-math.floor(List[i]),3)
+
+    return "Разница между максимальным (" + str(round(FractionalPartMax,4)) + ") и минимальным (" + str(round(FractionalPartMin,4)) + ") значениями дробных частей элементов составляет: " + str(round(FractionalPartMax-FractionalPartMin,4)) + "."
+# Задание 4. Напишите программу, которая будет преобразовывать десятичное число в двоичное.
+# *Пример:* - 45 -> 101101; 3 -> 11; 2 -> 10.
+def Task_4_10to2Converstion():
+    import random    
+
+    N = random.randint(0,101)
+    N10 = N
+    N2 = ""
+    while N10 > 0 :
+        N2 = str(N10%2) + N2
+        N10 = N10 // 2
+
+    return "Число " + str(N) + " в двоичной системе счисления: " + str(N2)
+# Задание 5. Задайте число. Составьте список чисел Фибоначчи, в том числе для отрицательных индексов.
+# *Пример:* для k = 8 список будет выглядеть так: [-21 ,13, -8, 5, −3, 2, −1, 1, 0, 1, 1, 2, 3, 5, 8, 13, 21]
+def Task_5_CopleteFibonachi():
+    import OwnFunctions as OFs
+    
+    N = OFs.input_natural_number("Введите натуральное число - длину ряда: ")
+    List = [0,1]
+    List += [(List := [List[1], List[0] + List[1]]) and List[1] for k in range(N)]
+          # Дополнение ряда Фибоначчи отрицательными элементами    
+    for i in range(N+1) : 
+        List.insert(0, (List[1] - List[0]))
+
+    return "Полный ряд Фибоначчи:" + str(List)
+
+          # Запуск задания 01                 
+# print("Сумма чисел на нечетных позициях:", Task_1_OddPositionsSum())
+          # Запуск задания 02                 
+# print(Task_2_PairsProducts(7))
+          # Запуск задания 03                 
+# print(Task_3_FractionalPartsDifference(9))
+          # Запуск задания 04                 
+# print(Task_4_10to2Converstion())
+          # Запуск задания 05                 
+# print(Task_5_CopleteFibonachi())
+
+'''
           # Домашнее задание к уроку 02
 # Задание 01: Напишите программу, которая принимает на вход вещественное число и показывает сумму его цифр.
 # Пример: 6782 -> 23, 0,56 -> 11.
@@ -79,7 +179,7 @@ def ListMixing(N):
 # print(ProdactOfSelectedNums(7,"HW_task_02_04.txt"))
           # Запуск задания 05                 
 print(ListMixing(5))
-
+'''
 '''
           # Домашнее задание к уроку 01
 # Задание 01: Напишите программу, которая принимает на вход цифру, обозначающую день недели, и проверяет,
