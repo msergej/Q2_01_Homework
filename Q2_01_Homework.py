@@ -1,8 +1,105 @@
 import os
 os.system('cls||clear')
+          # Для sympy работает только на уровне модуля, я не отдельной def()
+import sympy
+from sympy import *
 
+
+          # Домашнее задание к уроку 04
+# Задание 1. Вычислить число Пи c заданной точностью d.
+# *Пример:* при d = 0.001, π = 3.141; при d = 0.0001, π = 3.1415.
+def Task_04_01_Shrinked_PI():
+    from mpmath import mp
+
+    D = int(input("Введите требуемое число знаков π после запятой (от 0 до 100):"))
+    if D>=1 and D<=100 :
+        mp.dps = 101
+        return str(mp.pi)[:D+2]
+    else :
+        return "Некорректно указано число знаков после запятой (" + str(D) + ")."
+# Задание 2. Задайте натуральное число N. Напишите программу, которая составит список простых множителей числа N.
+# * 6 -> [2,3]; * 144 -> [2,3].
+def Task_04_02_UniqueSimpleDivisors():
+    import OwnFunctions as OFs
+    import pandas as pd
+
+    N = OFs.input_natural_number("Введите натуральное число: ")
+    Num = N
+    SimpleDivisors = [1]
+    Devisor = 2               # Разложение числа на простые делители
+    while N > 1:
+        if N % Devisor == 0:
+            SimpleDivisors.append(Devisor)
+            N = N / Devisor
+        else:
+            Devisor += 1
+    return "Уникальные простые делители числа " + str(Num) + ": " + str(pd.Series(SimpleDivisors).drop_duplicates().tolist())
+# Задание 3. Задайте последовательность чисел.
+# Напишите программу, которая выведет список неповторяющихся элементов исходной последовательности.
+def Task_04_03_UniqueListElements(N):
+    import random  
+    import pandas as pd
+
+    List = [random.randint(0,20) for i in range(0, N)]
+    print("Исходная последовательность", N, "чисел:", List)
+    return "Уникальные значения (" + str(len(pd.Series(List).drop_duplicates().tolist())) + ") в исходной последовательности:" +\
+           str(pd.Series(List).drop_duplicates().tolist())
+# Задание 4. Задана натуральная степень k.
+# Сформировать случайным образом список коэффициентов (значения от 0 до 100) многочлена,
+# и записать в файл многочлен степени k.(записать в строку)
+# Пример: k=2 => 2*x^2 + 4*x + 5 или x^2 + 5 или 10*x**2; k=3 => 2*x^3 + 4*x^2 + 4*x + 5
+def Task_04_04_Polynomial():
+    import OwnFunctions as OFs
+    import random
+
+    N = OFs.input_natural_number("Введите натуральное число - степень многочлена: ")        
+    if (N <= 12) :
+        Сoefficients = [random.randint(-100,100) for i in range(N+1)]
+        print("Коэффициенты многочлена: ", Сoefficients)
+        x = Symbol('x')
+        TitleText = "Многочлен степени " + str(N) + " с заданными коэффициентами: \n"
+        Polynomial = str(sum(map(prod,zip(Сoefficients,[x**i for i in range(N,-1,-1)]))))
+        File = open("HW_task_04_04.txt", "w")
+        File.write(TitleText)
+        File.write(Polynomial)
+        File.close()
+        return TitleText + Polynomial
+    else :
+        return "Слишком высокая степень многочлена!"
+# Задание 5. Даны два файла, в каждом из которых находится запись многочлена.
+# Задача - сформировать файл, содержащий сумму многочленов.
+# В file1.txt : 2*x**2 + 4*x + 5; в file2.txt: 4*x**2 + 1*x + 4; результирующий файл: 6*x**2 + 5*x + 9
+def Task_04_05_PolynomialSum() :
+    FileIn = open("HW_task_04_05_In_1.txt", "r")
+    P_1 = FileIn.read()
+    FileIn.close()
+    FileIn = open("HW_task_04_05_In_2.txt", "r")
+    P_2 = FileIn.read()
+    FileIn.close()    
+    print("Первый многочлен: ", P_1)
+    print("Второй многочлен: ", P_2)
+   
+    x = Symbol('x')
+    P_Mult = simplify(P_1) + simplify(P_2)
+    print("Результат сложения многочленов: ",P_Mult)
+    FileOut = open("HW_task_04_05_Out.txt", "w")
+    FileOut.write(str(P_Mult))
+    FileOut.close()
+    return "Результат сложения многочленов записан в файл."
+
+          # Запуск задания 01                 
+print(Task_04_01_Shrinked_PI())
+          # Запуск задания 02                 
+print(Task_04_02_UniqueSimpleDivisors())
+          # Запуск задания 03                 
+print(Task_04_03_UniqueListElements(15))
+          # Запуск задания 04                 
+print(Task_04_04_Polynomial())
+          # Запуск задания 05                 
+print(Task_04_05_PolynomialSum())
+
+'''
           # Домашнее задание к уроку 03
-
 # Задание 1. Задайте список из нескольких чисел. Напишите программу, которая найдёт сумму элементов списка,
 # # стоящих на нечётной позиции.
 # *Пример: [2, 3, 5, 9, 3] -> на нечётных позициях элементы 3 и 9, ответ: 12
@@ -99,7 +196,7 @@ def Task_5_CopleteFibonachi():
 # print(Task_4_10to2Converstion())
           # Запуск задания 05                 
 # print(Task_5_CopleteFibonachi())
-
+'''
 '''
           # Домашнее задание к уроку 02
 # Задание 01: Напишите программу, которая принимает на вход вещественное число и показывает сумму его цифр.
