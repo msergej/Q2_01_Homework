@@ -4,7 +4,154 @@ os.system('cls||clear')
 import sympy
 from sympy import *
 
+          # Домашнее задание к уроку 05
+# Задание 1. Создайте программу для игры с конфетами человек против человека.
+# *' Условие игры: На столе лежит 117 конфета. Играют два игрока делая ход друг после друга.
+# Первый ход определяется жеребьёвкой. За один ход можно забрать не более чем 28 конфет.
+# Все конфеты оппонента достаются сделавшему последний ход.
+# a) Добавьте игру против бота
+def Task_05_01a_Сandies_HvsH(N, TurnMax):
+    import OwnFunctions as OFs
 
+    print("Всего в игре", N, "конфет. За каждый ход игрок может взять не более", TurnMax, "конфет.")
+    print("Для ОСТАНОВКИ игры необходимо ввести число, большее чем", N, ".")
+    Rounds = 0
+    Wins = [0, 0] 
+    TurnCandies = 0
+    while (TurnCandies < N+1):
+        Rounds += 1
+        Player = Rounds % 2 + 1
+        LeftCandies = N
+        print("Раунд №", Rounds, "( начинает игрок", Player, ").")
+        while LeftCandies > 0 :
+            TurnCandies = Task_05_01c_СurrentTurn(Player, TurnMax, LeftCandies, N+1)
+            if TurnCandies > N :        # Выход, если введено число, превышающее первоначальное количество.
+                break
+            LeftCandies -= TurnCandies
+            if (LeftCandies == 0): 
+                Wins[Player-1] += 1
+                break
+            if (Player == 1): Player = 2         # Смена игрока
+            else: Player = 1 
+        if TurnCandies > N :            # Выход из игры, если введено число, превышающее первоначальное количество.
+            break
+    return "Сыграно раундов: " + str(Rounds-1) + ", общий счет - " + str(Wins[0]) + ":" + str(Wins[1]) + ". Спасибо за игру!"
+def Task_05_01b_Сandies_HvsB(N, TurnMax):
+    import OwnFunctions as OFs
+
+    print("Всего в игре", N, "конфет. За каждый ход можно взять не более", TurnMax, "конфет.")
+    print("Для ОСТАНОВКИ игры необходимо ввести число, большее чем", N, ".")
+    print("БОТ играет под номером 1 и не может остановить игру принудительно.")
+    Rounds = 0
+    Wins = [0, 0] 
+    TurnCandies = 0
+    while (TurnCandies < N+1):
+        Rounds += 1
+        Player = Rounds % 2 + 1
+        LeftCandies = N
+        print("Раунд №", Rounds, "( начинает игрок", Player, ").")
+        while LeftCandies > 0 :
+            if (Player == 2): TurnCandies = Task_05_01c_СurrentTurn(Player, TurnMax, LeftCandies, N+1)
+            else:                       # Ход БОТ-а (оптимальное или минимальное число конфет)
+                TurnCandies = LeftCandies % (TurnMax + 1)
+                if (TurnCandies == 0): TurnCandies = 1
+                print("БОТ: оставшихся конфет -", LeftCandies, ", беру", TurnCandies)
+            if TurnCandies > N :        # Выход, если введено число, превышающее первоначальное количество.
+                break
+            LeftCandies -= TurnCandies
+            if (LeftCandies == 0): 
+                Wins[Player-1] += 1
+                break
+            if (Player == 1): Player = 2         # Смена игрока
+            else: Player = 1 
+        if TurnCandies > N :            # Выход из игры, если введено число, превышающее первоначальное количество.
+            break
+    return "Сыграно раундов: " + str(Rounds-1) + ", общий счет - " + str(Wins[0]) + ":" + str(Wins[1]) + ". Спасибо за игру!"
+def Task_05_01c_СurrentTurn(Player, TurnMax, Left, Exit):
+    import OwnFunctions as OFs
+          # Повторный ввод запрашивается, если ход больше оставшегося числа или больше максимально возможного на взятие. 
+    TurnCandies = OFs.input_natural_number("Игрок " + str(Player) + ", введите число желаемых конфет из " + str(Left) + ": ")
+    while (TurnCandies < Exit) and ((TurnCandies > TurnMax) or (TurnCandies > Left)):
+        if (TurnCandies > Left) :
+            print("В игре осталось только", Left, "конфет!")
+            TurnCandies = OFs.input_natural_number("Игрок " + str(Player) + ", введите число желаемых конфет из " + str(Left) + ": ")
+        else:
+            print("Вы не можете взять более", TurnMax, "конфет!")
+            TurnCandies = OFs.input_natural_number("Игрок " + str(Player) + ", введите число желаемых конфет из " + str(Left) + ": ")
+    return TurnCandies
+# Задание 2. Создайте программу для игры в ""Крестики-нолики"".(в консоли происходит выбор позиции)
+def Task_05_02_X_0(N):
+    import OwnFunctions as OFs
+
+    print("Для ОСТАНОВКИ игры необходимо ввести целое число больше 9.")
+    Rounds = 0
+    Score = [0, 0, 0] 
+    Field = []
+    Field = [x+1 for x in range(9)]
+    print("Нумерация ячеек игрового поля:")
+    Task_05_02_X_0_FieldPrint(Field)
+    Field = [Field[i]*0 for i in range(9)]
+          # Исходное поле заполняется нулями, 1-й игрок ставит единицы, 2-й - двойки.
+    print("Текущее состояние игрового поля:")
+    Task_05_02_X_0_FieldPrint(Field)
+    TurnField = 0
+    while (TurnField <= N):
+        Rounds += 1
+        Player = Rounds % 2 + 1
+        LeftFields = N
+        print("Раунд №", Rounds, "( начинает игрок", Player, ").")
+        while LeftFields > 0 :
+            TurnField = Task_05_02_СurrentTurn(Field, Player, 9+1)
+            if TurnField > N :        # Выход, если введено число, превышающее N.
+                break
+            Field[TurnField-1] = Player
+            print("Текущее состояние игрового поля:")
+            Task_05_02_X_0_FieldPrint(Field)
+                                      # Завершение раунда и очистка поля, если выявлен победитель.
+            Winner =  Task_05_02_X_0_WinnerCheck(Field)
+            if Winner > 0 :
+                Score[Winner-1] += 1
+                Field = [Field[i]*0 for i in range(9)]
+                break
+            LeftFields -= 1
+            if (LeftFields == 0):     # Завершение раунда и очистка поля, если поле заполнено полностью (записывается ничья).
+                Score[2] += 1
+                Field = [Field[i]*0 for i in range(9)]
+                break
+            if (Player == 1): Player = 2         # Смена игрока
+            else: Player = 1 
+        if (TurnField > N): break       # Выход из игры, если введено число, превышающее N.
+    return "Сыграно раундов: " + str(Rounds-1) + ", общий счет - " + str(Score[0]) + ":" + str(Score[1]) + "=" + str(Score[2]) + ". Спасибо за игру!"
+def Task_05_02_X_0_FieldPrint(Field):
+    for i in range(3):
+        print(Field[i*3+0], " ",Field[i*3+1], " ", Field[i*3+2])
+    return 0    
+def Task_05_02_СurrentTurn(Field, Player, Exit):
+    import OwnFunctions as OFs
+          # Повторный ввод запрашивается, если имеет место попытка хода в заполненную ячейку. 
+    TurnFieldNumber = OFs.input_natural_number("Игрок " + str(Player) + ", введите номер поля ")
+    while (TurnFieldNumber < Exit) and (Field[TurnFieldNumber-1] !=0):
+        print("Поле", TurnFieldNumber, "уже заполнено!")
+        TurnFieldNumber = OFs.input_natural_number("Игрок " + str(Player) + ", введите номер поля:")
+    return TurnFieldNumber
+def Task_05_02_X_0_WinnerCheck(Field):
+    if (Field[0] == Field[1] == Field[2]): return Field[0]
+    elif (Field[3] == Field[4] == Field[5]): return Field[3]
+    elif (Field[6] == Field[7] == Field[8]): return Field[6]
+    elif (Field[0] == Field[3] == Field[6]): return Field[0]
+    elif (Field[1] == Field[4] == Field[7]): return Field[1]
+    elif (Field[2] == Field[5] == Field[8]): return Field[2]
+    elif (Field[0] == Field[4] == Field[8]): return Field[0]
+    elif (Field[2] == Field[4] == Field[6]): return Field[2]
+    else: return 0    
+
+          # Запуск задания 01 (Вместо 117 - первый задаваемый параметр)
+# if (int(input("Для игры с БОТ-ом введите 1: ")) != 1): print(Task_05_01a_Сandies_HvsH(65,28))
+# else: print(Task_05_01b_Сandies_HvsB(65,28))
+          # Запуск задания 02                 
+print(Task_05_02_X_0(9))
+
+'''
           # Домашнее задание к уроку 04
 # Задание 1. Вычислить число Пи c заданной точностью d.
 # *Пример:* при d = 0.001, π = 3.141; при d = 0.0001, π = 3.1415.
@@ -97,7 +244,7 @@ print(Task_04_03_UniqueListElements(15))
 print(Task_04_04_Polynomial())
           # Запуск задания 05                 
 print(Task_04_05_PolynomialSum())
-
+'''
 '''
           # Домашнее задание к уроку 03
 # Задание 1. Задайте список из нескольких чисел. Напишите программу, которая найдёт сумму элементов списка,
