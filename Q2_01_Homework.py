@@ -4,6 +4,51 @@ os.system('cls||clear')
 import sympy
 from sympy import *
 
+          # Домашнее задание к уроку 06
+# Задача: предложить улучшения кода для уже решённых задач.
+# С помощью использования **лямбд, filter, map, zip, enumerate, list comprehension и т.п. 3 любых заданий (из любого урока).
+
+# from functools import reduce
+# items = [1, 24, 17, 14, 9, 32, 2]
+# all_max = reduce(lambda a,b: a if (a > b) else b, items)
+# print(all_max)
+def Task_06_01_Ex_02_03(n):
+          # Задание 01 (урок 2). Задайте список из n чисел последовательности (1+1/n)^n и выведите на экран их сумму.
+    from functools import reduce
+
+    List = [(1+1/i)**i for i in range(1, n+1)]
+    print("Начальные (" + str(n) + ") элементы ряда: " + str(List))
+    ListSum = reduce(lambda x, y: x + y, List)
+    return "Сумма начальных (" + str(n) + ") элементов ряда равна " + str(ListSum) + ", среднее значение - " + str(ListSum / n) + "."
+def Task_06_02_Ex_02_01(N):
+          # Задание 01 (урок 2). Напишите программу, которая принимает на вход вещественное число и показывает сумму его цифр. Пример: 6782 -> 23, 0,56 -> 11.
+    from functools import reduce
+
+    DigitsList = {'0','1','2','3','4','5','6','7','8','9'}     
+    Nstr = str(N)
+    Nlist = list(map((lambda x: int(x) if (x in DigitsList) else 0), Nstr))
+    DigitsSum = reduce(lambda x, y: x + y, Nlist)
+    return "Сумма цифр числа " + str(N) + " составляет: " + str(DigitsSum) + "."
+def Task_06_03_Ex_03_01(N):
+          # Задание 1 (урок 3). Задайте список из нескольких чисел. Напишите программу, которая найдёт сумму элементов, стоящих на нечётных позициях.
+    import random
+    from functools import reduce
+
+    List = [random.randint(-100,101) for i in range(0, N)]
+    print("Заданный список: ", List)
+    OddPositionsList = list(List[i] if i%2 != 0 else 0 for i in range(len(List)))
+    OddPositionsSum = reduce(lambda x, y: x + y, OddPositionsList)
+    return "Сумма элементов, на нечетных позициях: " + str(OddPositionsSum) + "." 
+
+          # Запуск задания 01                 
+print(Task_06_01_Ex_02_03(10))
+          # Запуск задания 02                 
+print(Task_06_02_Ex_02_01(12345.6789))
+          # Запуск задания 03
+print(Task_06_03_Ex_03_01(6))
+
+
+'''
           # Домашнее задание к уроку 05
 # Задание 1. Создайте программу для игры с конфетами человек против человека.
 # *' Условие игры: На столе лежит 117 конфета. Играют два игрока делая ход друг после друга.
@@ -150,7 +195,7 @@ def Task_05_02_X_0_WinnerCheck(Field):
 # else: print(Task_05_01b_Сandies_HvsB(65,28))
           # Запуск задания 02                 
 print(Task_05_02_X_0(9))
-
+'''
 '''
           # Домашнее задание к уроку 04
 # Задание 1. Вычислить число Пи c заданной точностью d.
