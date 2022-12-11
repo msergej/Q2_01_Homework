@@ -7,11 +7,6 @@ from sympy import *
           # Домашнее задание к уроку 06
 # Задача: предложить улучшения кода для уже решённых задач.
 # С помощью использования **лямбд, filter, map, zip, enumerate, list comprehension и т.п. 3 любых заданий (из любого урока).
-
-# from functools import reduce
-# items = [1, 24, 17, 14, 9, 32, 2]
-# all_max = reduce(lambda a,b: a if (a > b) else b, items)
-# print(all_max)
 def Task_06_01_Ex_02_03(n):
           # Задание 01 (урок 2). Задайте список из n чисел последовательности (1+1/n)^n и выведите на экран их сумму.
     from functools import reduce
