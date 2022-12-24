@@ -1,9 +1,48 @@
 import os
 os.system('cls||clear')
           # Для sympy работает только на уровне модуля, я не отдельной def()
+import pandas as pd
 import sympy
 from sympy import *
+import requests
+import string
+import telebot
+from bot_tg import Token
+# import json
 
+          # Домашнее задание к уроку 10
+# Задание: cоздать бота для вывода текущего курса валют(желательно запрос по конкретной валюте)
+# /currency USD
+def cbr_exchange_rate(currency):
+    res = requests.get('https://www.cbr-xml-daily.ru/daily_json.js').json()
+    courses_table = pd.DataFrame(res['Valute']).T
+    courses_table["Изменение (%)"] = courses_table.apply(lambda row: round((row.Value/row.Previous-1)*100,2) if row.Value/row.Previous >=1 else round(-(1- row.Value/row.Previous)*100,2), axis = 1)
+    courses_table.rename(columns={'Nominal': 'Единиц', 'Name': 'Валюта', 'Value': 'Курс', 'Previous': 'Предыдущий курс'}, inplace=True)
+    courses_table.drop(["ID", "NumCode", "CharCode"], axis=1, inplace=True)
+    
+    if str.upper(currency) in courses_table.index :
+        currency_list = []
+        currency_list.append(str.upper(currency))
+        return courses_table[courses_table.index.isin(currency_list)]
+    elif str.lower(currency) == 'all' : return courses_table
+    else : return courses_table[courses_table.index.isin([])]
+
+bot = telebot.TeleBot(Token)
+
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+    match message.text:
+        case '/help': bot.reply_to(message, "Для получения курса валюты введите команду '/cur XXX', где XXX - код валюты. Для получения курсов всех валют наберите '/cur ALL'.")
+        case '/start': bot.reply_to(message, "Вводите команду.")
+
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    currency = str(message.text)[5:]
+    if not cbr_exchange_rate(currency).empty : bot.send_message(message.chat.id, cbr_exchange_rate(currency).to_string())
+    else : bot.send_message(message.chat.id, "Введен неверный код валюты!")  
+
+print("Бот запущен.")
+bot.infinity_polling()
 
 
 '''
